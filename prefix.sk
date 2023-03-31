@@ -1,0 +1,53 @@
+variables:
+	#{_prefix::apple} = "&f[&c사과반&f]"
+  #{_prefix::orange} = "&f[&6오렌지반&f]"
+  #{_prefix::coconut} = "&f[&f코코넛반&f]"
+  #{_prefix::grapes} = "&f[&9포도반&f]"
+  {_prefix::default} = "&f[&e신입생&f]"
+
+command /칭호 [<text>] [<player>] [<text>]:
+  permission: sk.prefix
+  usage: 사용법: /칭호 <반 이름 또는 설정> <닉네임> <설정시 칭호>
+  trigger:
+    if arg 1 is "설정":
+      if arg 2 is set:
+        if arg 3 is set:
+          if player has permission "sk.prefix":
+            set {_prefix} to arg 3
+            set {prefix::%uuid of arg 2%} to {_prefix}
+            send "%player%님의 칭호를 %{prefix::%uuid of arg 2%}% 으로 설정하였습니다." to player
+    else if arg 1 is "초기화":
+      if player has permission "sk.prefix":
+        if arg 2 is set:
+          clear {prefix::%uuid of arg 2%}
+          send "%arg 2% 님의 칭호를 초기화 했습니다."
+    else if arg 1 is "사과반":
+      if arg 2 is set:
+        if player has permission "sk.prefix":
+          set {prefix::%uuid of arg 2%} to "&f[&c사과반&f]"
+          send "%player%님의 칭호를 %{prefix::%uuid of arg 2%}% 으로 설정하였습니다." to player
+    else if arg 1 is "오렌지반":
+      if arg 2 is set:
+        if player has permission "sk.prefix":
+          set {prefix::%uuid of arg 2%} to "&f[&6오렌지반&f]"
+          send "%player%님의 칭호를 %{prefix::%uuid of arg 2%}% 으로 설정하였습니다." to player
+    else if arg 1 is "코코넛반":
+      if arg 2 is set:
+        if player has permission "sk.prefix":
+          set {prefix::%uuid of arg 2%} to "&f[&f코코넛반&f]"
+          send "%player%님의 칭호를 %{prefix::%uuid of arg 2%}% 으로 설정하였습니다." to Player
+    else if arg 1 is "포도반":
+      if arg 2 is set:
+        if player has permission "sk.prefix":
+          set {prefix::%uuid of arg 2%} to "&f[&9포도반&f]"
+          send "%player%님의 칭호를 %{prefix::%uuid of arg 2%}% 으로 설정하였습니다." to player
+    else if player does not have permission "sk.prefix":
+      send "당신은 명령어를 사용할 권한이 없습니다." to player
+
+on chat:
+    if {prefix::%uuid of player%} is set:
+        set chat format to "%{prefix::%uuid of player%}% &r%player% &r: &r%message%"
+        #set tab list name of %{prefix::%uuid of arg 2%}% to "%{prefix::%uuid of player%}%"
+        #set loop-player's tablist name to "%{prefix::%uuid of arg 2%}% %player%"
+    else:
+        set chat format to "%{_prefix::default}% %player% : %message%"
