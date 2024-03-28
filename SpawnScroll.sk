@@ -1,0 +1,30 @@
+command /마을귀환 [<text>] [<integer>]:
+    trigger:
+        if player is op:
+            if arg 1 is not set:
+                send "&c사용법: /마을귀환 설정 - 현재 위치를 마을 귀환 위치로 지정"
+                send "&c사용법: /마을귀환 아이템 개수 - 마을 귀환 주문서 아이템 소환"
+            else if arg 1 is "설정":
+                set {testpostion} to player's location
+                send "해당 위치로 마을귀환을 설정하였습니다."
+            else if arg 1 is "아이템":
+                if arg 2 is set:
+                    set {n} to arg-2
+                    give player {n} of paper named "&b마을 귀환 주문서" with lore "&9우클릭 시 마을로 귀환합니다." and "&c1회용 아이템"
+                else:
+                    send "&c사용법: /마을귀환 아이템 개수 - 마을 귀환 주문서 아이템 소환"
+
+on rightclick with paper:
+    set {_lore} to uncolored line 1 of lore of item
+    if {_lore} is "우클릭 시 마을로 귀환합니다.":
+        if {testpostion} is not set:
+            send "&c마을귀환 위치가 설정되지 않았습니다." to player
+        else:
+            if player has player's tool on cooldown:
+                set {_cooldown} to item cooldown of player's tool for player
+                send "귀환서 쿨타임 적용중 : %item cooldown of player's tool for player%" to player
+            else:
+                teleport player to {testpostion}
+                remove 1 of player's tool from player's inventory
+                set item cooldown of player's tool for player to 5 seconds
+                send "&b마을로 귀환하였습니다." to player
